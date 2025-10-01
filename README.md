@@ -4,36 +4,36 @@
 [![Cypress](https://img.shields.io/badge/cypress-15.3.0-green.svg)](https://cypress.io/)
 [![Node.js](https://img.shields.io/badge/node.js-20+-blue.svg)](https://nodejs.org/)
 
-## 📋 Descrição
-Framework de testes automatizados para APIs REST utilizando **Cypress**, o projeto é focado em testes de **Usuários**, **Autenticação** e **Produtos** da API [ServeRest](https://serverest.dev).
+## 📋 Description
+Automated testing framework for REST APIs using **Cypress**, the project focuses on testing **Users**, **Authentication** and **Products** from the [ServeRest](https://serverest.dev) API.
 
-## 🏗️ Arquitetura e Padrões Implementados
+## 🏗️ Architecture and Implemented Patterns
 
 ### ✅ **Builder Pattern**
-- **UserBuilder** - Construção flexível de dados de usuário
-- **ProductBuilder** - Geração de produtos com diferentes características  
-- **LoginBuilder** - Criação de credenciais válidas e inválidas
+- **UserBuilder** - Flexible construction of user data
+- **ProductBuilder** - Generation of products with different characteristics  
+- **LoginBuilder** - Creation of valid and invalid credentials
 
 ### ✅ **Command Pattern**
-- **Custom Commands** - Comandos reutilizáveis para operações comuns
-- **Encapsulamento** - Lógica de API abstraída em comandos específicos
+- **Custom Commands** - Reusable commands for common operations
+- **Encapsulation** - API logic abstracted into specific commands
 
 ### ✅ **Clean Code**
-- **Separação de responsabilidades** - Builders, Commands e Tests organizados
-- **Nomenclatura descritiva** - Código autodocumentado
-- **Reutilização** - Componentes modulares e flexíveis
+- **Separation of concerns** - Builders, Commands and Tests organized
+- **Descriptive naming** - Self-documented code
+- **Reusability** - Modular and flexible components
 
-## 🚀 Tecnologias e Ferramentas
+## 🚀 Technologies and Tools
 
-| Ferramenta | Versão | Propósito |
-|------------|---------|-----------|
-| **Cypress** | 15.3.0 | Framework de testes E2E/API |
-| **Faker.js** | 10.0.0 | Geração de dados realísticos |
-| **JavaScript** | ES6+ | Linguagem de programação |
+| Tool | Version | Purpose |
+|------|---------|---------|
+| **Cypress** | 15.3.0 | E2E/API testing framework |
+| **Faker.js** | 10.0.0 | Realistic data generation |
+| **JavaScript** | ES6+ | Programming language |
 | **GitHub Actions** | - | CI/CD Pipeline |
-| **Node.js** | 20+ | Runtime JavaScript |
+| **Node.js** | 20+ | JavaScript runtime |
 
-## 📁 Estrutura do Projeto
+## 📁 Project Structure
 
 ```
 cypress-api_ciandt/
@@ -42,101 +42,101 @@ cypress-api_ciandt/
 │       └── pipeline-actions.yml    # CI/CD Configuration
 ├── cypress/
 │   ├── e2e/api/
-│   │   ├── Login.cy.js            # 2 testes - Auth scenarios
-│   │   ├── Product.cy.js          # 1 teste - Product management  
-│   │   └── Users.cy.js            # 3 testes - User CRUD
+│   │   ├── Login.cy.js            # 2 tests - Auth scenarios
+│   │   ├── Product.cy.js          # 1 test - Product management  
+│   │   └── Users.cy.js            # 3 tests - User CRUD
 │   ├── support/
 │   │   ├── builders/
-│   │   │   ├── user.builder.js    # Builder para dados de usuário
-│   │   │   ├── product.builder.js # Builder para dados de produto
-│   │   │   └── login.builder.js   # Builder para credenciais
+│   │   │   ├── user.builder.js    # Builder for user data
+│   │   │   ├── product.builder.js # Builder for product data
+│   │   │   └── login.builder.js   # Builder for credentials
 │   │   ├── commands.js            # Custom Cypress commands
-│   │   └── e2e.js                # Configurações globais
+│   │   └── e2e.js                # Global configurations
 │   └── fixtures/
-├── cypress.config.js              # Configuração do Cypress
+├── cypress.config.js              # Cypress configuration
 ├── package.json                   # Dependencies & scripts
-└── README.md                     # Documentação
+└── README.md                     # Documentation
 ```
 
-## 🛠️ Configuração e Execução
+## 🛠️ Setup and Execution
 
-### **Pré-requisitos**
+### **Prerequisites**
 - Node.js 18+ 
-- npm ou yarn
+- npm or yarn
 
-### **Instalação**
+### **Installation**
 ```bash
-# Clonar repositório
+# Clone repository
 git clone https://github.com/GleissonSantos/cypress-api-ciandt.git
 cd cypress-api-ciandt
 
-# Instalar dependências
+# Install dependencies
 npm install
 
-# Verificar instalação
+# Verify installation
 npx cypress verify
 ```
 
-### **Execução dos Testes**
+### **Running Tests**
 ```bash
-# Executar todos os testes (headless)
+# Run all tests (headless)
 npx cypress run
 
-# Executar testes específicos
+# Run specific tests
 npx cypress run --spec "cypress/e2e/api/Users.cy.js"
 
-# Abrir interface gráfica
+# Open graphical interface
 npx cypress open
 
-# Executar com browser específico
+# Run with specific browser
 npx cypress run --browser chrome
 ```
 
-## 🧪 Cenários de Teste Implementados
+## 🧪 Implemented Test Scenarios
 
-### 👥 **Usuários (Users.cy.js)** - 3 Testes
-- ✅ **Cadastro de usuário** - Criação com dados válidos
-- ✅ **Email duplicado** - Validação de regra de negócio
-- ✅ **Busca por ID** - Recuperação e validação de dados
+### 👥 **Users (Users.cy.js)** - 3 Tests
+- ✅ **User registration** - Creation with valid data
+- ✅ **Duplicate email** - Business rule validation
+- ✅ **Search by ID** - Data retrieval and validation
 
-### 🔐 **Login (Login.cy.js)** - 2 Testes  
-- ✅ **Login válido** - Autenticação com credenciais corretas
-- ✅ **Login inválido** - Tentativa com credenciais incorretas
+### 🔐 **Login (Login.cy.js)** - 2 Tests  
+- ✅ **Valid login** - Authentication with correct credentials
+- ✅ **Invalid login** - Attempt with incorrect credentials
 
-### 🛍️ **Produtos (Product.cy.js)** - 1 Teste
-- ✅ **Cadastro de produto** - Criação com autenticação obrigatória
+### 🛍️ **Products (Product.cy.js)** - 1 Test
+- ✅ **Product registration** - Creation with required authentication
 
 
 ## 🤖 CI/CD Pipeline
 
-O projeto utiliza **GitHub Actions** para automação:
+The project uses **GitHub Actions** for automation:
 
-- ✅ **Trigger**: Push/PR para branch `main`
+- ✅ **Trigger**: Push/PR to `main` branch
 - ✅ **Environment**: Ubuntu Latest + Node.js 20
 - ✅ **Steps**: Checkout → Install → Test → Report
-- ✅ **Cache**: Dependências npm otimizadas
+- ✅ **Cache**: Optimized npm dependencies
 
-## 📊 Relatórios e Métricas
+## 📊 Reports and Metrics
 
-### **Cobertura Atual**
-- **Total de testes**: 8 testes
-- **Taxa de sucesso**: 100% ✅
-- **Tempo médio**: ~3 segundos
-- **APIs testadas**: 3 endpoints principais
+### **Current Coverage**
+- **Total tests**: 8 tests
+- **Success rate**: 100% ✅
+- **Average time**: ~3 seconds
+- **Tested APIs**: 3 main endpoints
 
-### **Validações Implementadas**
+### **Implemented Validations**
 - ✅ Status codes (200, 201, 400, 401)
 - ✅ Response body structure
 - ✅ Business rules validation  
 - ✅ Data type verification
 
-## 🔄 Roadmap e Melhorias Futuras
+## 🔄 Roadmap and Future Improvements
 
-### **Próximas Implementações**
-- [ ] **Page Object Model** - Organização de requisições API
-- [ ] **Relatórios HTML** - Dashboard de resultados
+### **Next Implementations**
+- [ ] **Page Object Model** - API request organization
+- [ ] **HTML Reports** - Results dashboard
 
-## 👨‍💻 Autor
+## 👨‍💻 Author
 
 **Gleisson Santos**  
 🐙 GitHub: [@GleissonSantos](https://github.com/GleissonSantos)
