@@ -2,7 +2,6 @@ import { UserBuilder } from '../../support/builders/user.builder';
 
 describe('API - Users Test', () => {
 
-  // Criating a new user successfully
   it('Register user successfully', () => {
     const userNew = UserBuilder.new().build();
 
@@ -12,18 +11,18 @@ describe('API - Users Test', () => {
     })
   })
 
-  // Trying to create a user with an email that is already registered
+  
   it('Register the same user twice', () => {
     const email = `registered_${Date.now()}@teste.com`;
     const userNew = UserBuilder.new().withEmail(email).build();
 
-    // Creating the first user (should succeed)
+    
     cy.request('POST', '/usuarios', userNew).then(res => {
       expect(res.status).to.eq(201)
       expect(res.body.message).to.contain('Cadastro realizado com sucesso')
     })
 
-    // Trying to create the same user again (should fail)
+    
     cy.request({
       method: 'POST',
       failOnStatusCode: false,
@@ -35,12 +34,12 @@ describe('API - Users Test', () => {
     })
   })
 
-  // Searching for a registered user by their ID
+  
   it('Search registered user by ID', () => {
     const userNew = UserBuilder.new().build();
 
     cy.RegisterNewUser(userNew).then(registerRes => {
-      //Validating user registration
+      
       expect(registerRes.status).to.eq(201)
       expect(registerRes.body.message).to.contain('Cadastro realizado com sucesso')
 
@@ -59,7 +58,7 @@ describe('API - Users Test', () => {
     const userNew = UserBuilder.new().build();
 
     cy.RegisterNewUser(userNew).then(registerRes => {
-      //Validating user registration
+      
       expect(registerRes.status).to.eq(201)
       expect(registerRes.body.message).to.contain('Cadastro realizado com sucesso')
 
@@ -75,7 +74,6 @@ describe('API - Users Test', () => {
         expect(updateRes.status).to.eq(200)
         expect(updateRes.body.message).to.contain('Registro alterado com sucesso')
 
-        // Verifying the update by fetching the user again
         cy.request('GET', `/usuarios/${userId}`).then(getRes => {
           expect(getRes.status).to.eq(200)
           expect(getRes.body.nome).to.eq(updatedName)

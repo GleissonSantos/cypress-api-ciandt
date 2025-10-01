@@ -1,5 +1,5 @@
 
-// Command to register a new user sucessfully
+
 Cypress.Commands.add('RegisterNewUser', (userNew) => {
     const userPayload = userNew.nome ? userNew : {
         nome: userNew.nome,
@@ -11,7 +11,7 @@ Cypress.Commands.add('RegisterNewUser', (userNew) => {
     return cy.request('POST', '/usuarios', userPayload);
 })
 
-// Command to login successfully
+
 Cypress.Commands.add('LoginSuccess', (email, password) => {
     return cy.request('POST', '/login', {
         email: email,
@@ -19,7 +19,7 @@ Cypress.Commands.add('LoginSuccess', (email, password) => {
     });
 })
 
-// Command to register a new product successfully
+
 Cypress.Commands.add('RegisterNewProduct', ({ productName, productPrice, productDescription, productQuantity, token }) => {
     return cy.request({
         method: 'POST',
