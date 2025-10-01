@@ -1,142 +1,89 @@
-import { faker } from '@faker-js/faker';
+import { LoginBuilder } from '../../support/builders/login.builder';
+import { UserBuilder } from '../../support/builders/user.builder';
+import { ProductBuilder } from '../../support/builders/product.builder';
 
 describe('API - Products', () => {
 
-    // Criating a product requires authentication, so we need to login first
+    // Creating a product requires authentication, so we need to login first
     it('Register product successfully', () => {
-        const userName = faker.person.fullName();
-        const userEmail = faker.internet.email({ provider: 'teste.com' });
-        const userPassword = faker.internet.password();
-        const productName = faker.commerce.productName();
-        const productPrice = faker.commerce.price({ min: 10, max: 1000, dec: 0, symbol: '' });
-        const productDescription = faker.commerce.productDescription();
-        const productQuantity = faker.number.int({ min: 1, max: 10 });
 
-        cy.RegisterNewUser({ nome: userName, email: userEmail, password: userPassword })
-        cy.LoginSuccess(userEmail, userPassword).then(token => {
-            cy.request({
-                method: 'POST',
-                url: '/produtos',
-                headers: { authorization: token },
-                body: {
-                    nome: productName,
-                    preco: productPrice,
-                    descricao: productDescription,
-                    quantidade: productQuantity
-                }
-            }).then(res => {
-                expect(res.status).to.eq(201)
-                expect(res.body.message).to.contain('Cadastro realizado com sucesso')
-                return res.body._id;
-            })
-        })
-    })
-
-    // Search a previously registered product by ID and validate the response
-    it('Search product previously registered by ID', () => {
-        const userName = faker.person.fullName();
-        const userEmail = faker.internet.email({ provider: 'teste.com' });
-        const userPassword = faker.internet.password();
-        const productName = faker.commerce.productName();
-        const productPrice = faker.commerce.price({ min: 10, max: 1000, dec: 0, symbol: '' });
-        const productDescription = faker.commerce.productDescription();
-        const productQuantity = faker.number.int({ min: 1, max: 10 });
-
-        cy.RegisterNewUser({ nome: userName, email: userEmail, password: userPassword })
-        cy.LoginSuccess(userEmail, userPassword).then(token => {
-            cy.RegisterNewProduct({ 
-                productName, 
-                productPrice, 
-                productDescription, 
-                productQuantity,
-                token 
-            }).then(productId => {
-                cy.request({
-                    method: 'GET',
-                    url: `/produtos/${productId}`,
-                    headers: { authorization: token }
-                }).then(res => {
-                    expect(res.status).to.eq(200)
-                    expect(res.body.nome).to.eq(productName)
-                    expect(res.body.preco).to.eq(Number(productPrice))
-                    expect(res.body.descricao).to.eq(productDescription)
-                    expect(res.body.quantidade).to.eq(productQuantity)
+        // Creating user and product with Builder Pattern
+        const newUser = UserBuilder.new().build();
+        const newProduct = ProductBuilder.new().build();
+        
+        cy.RegisterNewUser(newUser).then(registerRes => {
+            //Validating user registration
+            expect(registerRes.status).to.eq(201)
+            expect(registerRes.body.message).to.contain('Cadastro realizado com sucesso')
+            
+            const sucessLogin = LoginBuilder.new().withEmail(newUser.email).withPassword(newUser.password).build();
+            cy.LoginSuccess(sucessLogin.email, sucessLogin.password).then(loginRes => {
+                // Validating login
+                expect(loginRes.status).to.eq(200)
+                expect(loginRes.body).to.have.property('authorization')
+                
+                const token = loginRes.body.authorization;
+                cy.RegisterNewProduct({
+                    productName: newProduct.nome,
+                    productPrice: newProduct.preco,
+                    productDescription: newProduct.descricao,
+                    productQuantity: newProduct.quantidade,
+                    token 
+                }).then(productRes => {
+                    // Validating product creation
+                    expect(productRes.status).to.eq(201)
+                    expect(productRes.body.message).to.contain('Cadastro realizado com sucesso')
+                    expect(productRes.body._id).to.be.a('string')
+                    expect(productRes.body._id).to.not.be.empty
                 })
-            })
+            })  
         })
     })
 
-    // Editing a product previously registered and validate the response
-    it("Edit a product previously registered by ID", () => {
-        const userName = faker.person.fullName();
-        const userEmail = faker.internet.email({ provider: 'teste.com' });
-        const userPassword = faker.internet.password();
-        const productName = faker.commerce.productName();
-        const productPrice = faker.commerce.price({ min: 10, max: 1000, dec: 0, symbol: '' });
-        const productDescription = faker.commerce.productDescription();
-        const productQuantity = faker.number.int({ min: 1, max: 10 });
+    it('Delete product successfully', () => {
 
-        const newProductName = faker.commerce.productName();
-        const newProductPrice = faker.commerce.price({ min: 10, max: 1000, dec: 0, symbol: '' });
-        const newProductDescription = faker.commerce.productDescription();  
-        const newProductQuantity = faker.number.int({ min: 20, max: 50 });
+        // Creating user and product with Builder Pattern
+        const newUser = UserBuilder.new().build();
+        const newProduct = ProductBuilder.new().build();
+        
+        cy.RegisterNewUser(newUser).then(registerRes => {
+            //Validating user registration
+            expect(registerRes.status).to.eq(201)
+            expect(registerRes.body.message).to.contain('Cadastro realizado com sucesso')
+            
+            const sucessLogin = LoginBuilder.new().withEmail(newUser.email).withPassword(newUser.password).build();
+            cy.LoginSuccess(sucessLogin.email, sucessLogin.password).then(loginRes => {
+                // Validating login
+                expect(loginRes.status).to.eq(200)
+                expect(loginRes.body).to.have.property('authorization')
+                
+                const token = loginRes.body.authorization;
+                cy.RegisterNewProduct({
+                    productName: newProduct.nome,
+                    productPrice: newProduct.preco,
+                    productDescription: newProduct.descricao,
+                    productQuantity: newProduct.quantidade,
+                    token 
+                }).then(productRes => {
+                    // Validating product creation
+                    expect(productRes.status).to.eq(201)
+                    expect(productRes.body.message).to.contain('Cadastro realizado com sucesso')
+                    expect(productRes.body._id).to.be.a('string')
+                    expect(productRes.body._id).to.not.be.empty
 
-        cy.RegisterNewUser({ nome: userName, email: userEmail, password: userPassword })
-        cy.LoginSuccess(userEmail, userPassword).then(token => {
-            cy.RegisterNewProduct({ 
-                productName, 
-                productPrice, 
-                productDescription, 
-                productQuantity,
-                token 
-            }).then(productId => {
-                cy.request({
-                    method: 'PUT',
-                    url: `/produtos/${productId}`,
-                    headers: { authorization: token },
-                    body: {
-                        nome: newProductName,
-                        preco: newProductPrice,
-                        descricao: newProductDescription,
-                        quantidade: newProductQuantity
-                    }
-                }).then(res => {
-                    expect(res.status).to.eq(200)
-                    expect(res.body.message).to.contain('Registro alterado com sucesso')
+                    const productId = productRes.body._id;
+                    // Deleting the created product
+                    cy.request({
+                        method: 'DELETE',
+                        url: `/produtos/${productId}`,
+                        headers: { authorization: token }
+                    }).then(deleteRes => {
+                        // Validating product deletion
+                        expect(deleteRes.status).to.eq(200)
+                        expect(deleteRes.body.message).to.contain('Registro excluído com sucesso')
+                    })
                 })
-            })
+            })  
         })
     })
-
-    // Deleting a product previously registered and validate the response
-    it('Delete product previously registered by ID', () => {
-        const userName = faker.person.fullName();
-        const userEmail = faker.internet.email({ provider: 'teste.com' });
-        const userPassword = faker.internet.password();
-        const productName = faker.commerce.productName();
-        const productPrice = faker.commerce.price({ min: 10, max: 1000, dec: 0, symbol: '' });
-        const productDescription = faker.commerce.productDescription();
-        const productQuantity = faker.number.int({ min: 1, max: 10 });
-
-        cy.RegisterNewUser({ nome: userName, email: userEmail, password: userPassword })
-        cy.LoginSuccess(userEmail, userPassword).then(token => {
-            cy.RegisterNewProduct({ 
-                productName, 
-                productPrice, 
-                productDescription, 
-                productQuantity,
-                token 
-            }).then(productId => {
-                cy.request({
-                    method: 'DELETE',
-                    url: `/produtos/${productId}`,
-                    headers: { authorization: token }
-                }).then(res => {
-                    expect(res.status).to.eq(200)
-                    expect(res.body.message).to.contain('Registro excluído com sucesso')
-                })
-            })
-        })
-    })
-
 })

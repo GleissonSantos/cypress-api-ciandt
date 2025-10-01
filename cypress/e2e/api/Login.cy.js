@@ -1,37 +1,41 @@
-import { faker } from '@faker-js/faker';
+import { LoginBuilder } from '../../support/builders/login.builder';
+import { UserBuilder } from '../../support/builders/user.builder';
 
 describe('API - Login ', () => {
 
-    // Login successfully with valid credentials and get the authorization token
     it('login successfully returns authorization token', () => {
+        const newUser = UserBuilder.new().build();
+        
+        // Registering a new user to ensure valid credentials
+        cy.RegisterNewUser(newUser).then(registerRes => {
+            // Validating user registration
+            expect(registerRes.status).to.eq(201)
+            expect(registerRes.body.message).to.contain('Cadastro realizado com sucesso')
+            
+            const credentials = LoginBuilder.new()
+                .withEmail(newUser.email)
+                .withPassword(newUser.password)
+                .build();
 
-        const userName = faker.person.fullName();
-        const userEmail = faker.internet.email({ provider: 'teste.com' });
-        const userPassword = faker.internet.password();
-
-        cy.RegisterNewUser({ nome: userName, email: userEmail, password: userPassword })
-        cy.request('POST', '/login', {
-            email: userEmail,
-            password: userPassword
-        }).then(res => {
-            expect(res.status).to.eq(200)
-            expect(res.body).to.have.property('authorization')
-            expect(res.body.message).to.contain("Login realizado com sucesso")
-            return res.body.authorization;
+            // Doing the login request with the built credentials
+            cy.request('POST', '/login', credentials).then(loginRes => {
+                expect(loginRes.status).to.eq(200)
+                expect(loginRes.body).to.have.property('authorization')
+                expect(loginRes.body.message).to.contain("Login realizado com sucesso")
+                return loginRes.body.authorization;
+            })
         })
     })
 
     // Trying to login with an unregistered email and expect a 401 error
     it('login with invalid password', () => {
-
+        // Using invalid credentials from the Builder
+        const invalidCredentials = LoginBuilder.new().asInvalidCredentials().build();
         cy.request({
             method: 'POST',
             failOnStatusCode: false,
             url: '/login',
-            body: {
-                email: "incorrectUser@teste.com",
-                password: "121234"
-            }
+            body: invalidCredentials        
         }).then(res => {
             expect(res.status).to.eq(401)
             expect(res.body.message).to.contain('Email e/ou senha inválidos')
